@@ -1,0 +1,37 @@
+# --- Gradle ---
+/build/
+/.gradle/
+/!gradle/wrapper/gradle-wrapper.jar
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# --- Java ---
+*.class
+*.jar
+*.war
+*.ear
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+
+# --- Lombok-generated code ---
+*.lombok.config
+
+# --- Application Secrets ---
+.env
+
+# --- Docker ---
+**/pgdata/         # If you're mounting local Postgres volume (optional)
+*.pid              # If any Dockerized apps use process ID files
+
+# --- Flyway Migration Checksums (optional, if you ever check them in) ---
+flyway-schema-history*
