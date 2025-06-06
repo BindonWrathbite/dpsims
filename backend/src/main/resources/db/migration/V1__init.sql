@@ -1,5 +1,7 @@
 -- V1__init.sql
-CREATE TABLE test_table (
-                            id SERIAL PRIMARY KEY,
-                            name TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS app_user (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT,
+  role TEXT
 );
