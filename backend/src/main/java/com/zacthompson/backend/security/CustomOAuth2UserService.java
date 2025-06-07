@@ -26,12 +26,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         System.out.println("✅ CustomOAuth2UserService manually injected and active");
     }
 
-//    @Value("${auth.admin.email}")  // Admin email for special access
-//    private String adminEmail;
-//
-//    @Value("${auth.allowed.domain}")  // Domain that is allowed to authenticate
-//    private String allowedDomain;
-
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         System.out.println("👋 CustomOAuth2UserService is active");

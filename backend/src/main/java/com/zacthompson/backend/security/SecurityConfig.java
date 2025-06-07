@@ -18,8 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//    private final CustomOAuth2UserService customOAuth2UserService;
-
     @Bean
     public OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService(
             UserRepository userRepository,
