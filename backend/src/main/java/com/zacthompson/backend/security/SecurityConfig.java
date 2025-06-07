@@ -35,14 +35,15 @@ public class SecurityConfig {
 
         http
             .authorizeHttpRequests((auth -> auth  // Start configuring authorization rules
-                .requestMatchers("/api/auth/login", "/api/auth/logout").permitAll() // Allow unauthenticated access to login and logout endpoints
+//                .requestMatchers("/api/auth/login", "/api/auth/logout").permitAll() // Allow unauthenticated access to login and logout endpoints
                 .anyRequest().authenticated())) // Require authentication for all other requests
             .oauth2Login(oauth2 -> oauth2  // Configure OAuth2 login
+                    .defaultSuccessUrl("/api/auth/success", true)
                 .userInfoEndpoint(userInfo -> userInfo  // Set up user info endpoint
                     .userService(customOAuth2UserService)))  // Use custom user service for loading user details
             .logout(logout -> logout
                 .logoutUrl("/api/auth/logout")
-                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/api/auth/logout-success")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")

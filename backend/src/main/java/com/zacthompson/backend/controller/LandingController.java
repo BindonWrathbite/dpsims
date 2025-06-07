@@ -10,9 +10,4 @@ public class LandingController {
   public String landing() {
     return "Successfully reached the landing page!";
   }
-
-  @GetMapping("/")
-  public String index() {
-    return "Welcome to the backend application!";
-  }
 }
