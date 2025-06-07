@@ -2,33 +2,39 @@ package com.zacthompson.backend.security;
 
 import com.zacthompson.backend.entity.User;
 import com.zacthompson.backend.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Optional;
 
-@Service // Required to register this class as a "Service" Spring bean
-@RequiredArgsConstructor
+//@Service // Required to register this class as a "Service" Spring bean
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+    private final String adminEmail;
+    private final String allowedDomain;
 
-    @Value("${auth.admin.email}")  // Admin email for special access
-    private String adminEmail;
+    public CustomOAuth2UserService(UserRepository userRepository, String adminEmail, String allowedDomain) {
+        this.userRepository = userRepository;
+        this.adminEmail = adminEmail;
+        this.allowedDomain = allowedDomain;
+        System.out.println("✅ CustomOAuth2UserService manually injected and active");
+    }
 
-    @Value("${auth.allowed.domain}")  // Domain that is allowed to authenticate
-    private String allowedDomain;
+//    @Value("${auth.admin.email}")  // Admin email for special access
+//    private String adminEmail;
+//
+//    @Value("${auth.allowed.domain}")  // Domain that is allowed to authenticate
+//    private String allowedDomain;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        System.out.println("👋 CustomOAuth2UserService is active");
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         // --- Validate required config values ---
@@ -42,6 +48,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // Extract user information from the OAuth2 user
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
+
+        System.out.println("OAuth login attempt with email: " + email);
+        System.out.println("Allowed domain: " + allowedDomain);
+        System.out.println("Admin email: " + adminEmail);  // delete this line in production
 
         // Enforce domain restriction or allow specific admin email
         if (email == null ||
