@@ -21,10 +21,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
 
-    @Value("${auth.admin.email}")
+    @Value("${auth.admin.email}")  // Admin email for special access
     private String adminEmail;
 
-    @Value("${auth.allowed.domain}")
+    @Value("${auth.allowed.domain}")  // Domain that is allowed to authenticate
     private String allowedDomain;
 
     @Override
