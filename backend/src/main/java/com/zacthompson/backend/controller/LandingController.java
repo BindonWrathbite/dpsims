@@ -3,11 +3,14 @@ package com.zacthompson.backend.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController("/")
 public class LandingController {
 
-  @GetMapping("/api/landing")
+  @GetMapping("")
   public String landing() {
-    return "Successfully reached the landing page!";
+    return "Hello, World!";
   }
+
+  @GetMapping("/secured")
+  public String secured() {return "Hello, Secured World!";}  // Endpoint that requires authentication
 }
