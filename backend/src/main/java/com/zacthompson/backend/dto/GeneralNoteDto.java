@@ -12,6 +12,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class GeneralNoteDto {
-  private LocalDate localDate; // The date associated with the note
+  private LocalDate date; // The date associated with the note
   private String note; // The content of the general note
 }
