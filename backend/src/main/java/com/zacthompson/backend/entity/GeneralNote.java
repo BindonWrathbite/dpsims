@@ -1,5 +1,6 @@
 package com.zacthompson.backend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class GeneralNote {
+  @Column(name = "date")
   private LocalDate date;
+
+  @Column(name = "note")
   private String note;
 }
