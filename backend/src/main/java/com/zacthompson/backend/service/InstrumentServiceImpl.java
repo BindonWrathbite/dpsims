@@ -1,12 +1,13 @@
 package com.zacthompson.backend.service;
 
 import com.zacthompson.backend.dto.InstrumentDto;
-import com.zacthompson.backend.entity.Condition;
 import com.zacthompson.backend.entity.Instrument;
 import com.zacthompson.backend.mapper.InstrumentMapper;
 import com.zacthompson.backend.repository.InstrumentRepository;
+import com.zacthompson.backend.repository.InstrumentSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 /*
   Implementation of the InstrumentService interface.
-  Handles business logic for instrument operations and interacts with the repository and mapper layers.
+  Includes flexible filtering logic based on optional parameters.
  */
 @Service
 public class InstrumentServiceImpl implements InstrumentService {
@@ -52,7 +53,7 @@ public class InstrumentServiceImpl implements InstrumentService {
             .orElseThrow(() -> new RuntimeException("Instrument not found with id: " + id));
 
     Instrument updated = InstrumentMapper.toEntity(dto);
-    updated.setId(existing.getId()); // Keep existing ID
+    updated.setId(existing.getId());
     return InstrumentMapper.toDto(instrumentRepository.save(updated));
   }
 
@@ -64,24 +65,28 @@ public class InstrumentServiceImpl implements InstrumentService {
     instrumentRepository.deleteById(id);
   }
 
+  /*
+    Applies filtering and sorting in-memory for now.
+    Can be converted to Criteria queries or specs later for optimization.
+   */
   @Override
-  public List<InstrumentDto> getInstrumentsByType(String type, Sort sort) {
-    return instrumentRepository.findByTypeIgnoreCase(type, sort).stream()
-            .map(InstrumentMapper::toDto)
-            .collect(Collectors.toList());
-  }
+  public List<InstrumentDto> getFilteredInstruments(
+          String type,
+          String location,
+          String condition,
+          String brand,
+          String assignedStudent,
+          Sort sort
+  ) {
+    Specification<Instrument> spec = (root, query, cb) -> cb.conjunction();
 
-  @Override
-  public List<InstrumentDto> getInstrumentsByTypeAndLocation(String type, String location, Sort sort) {
-    return instrumentRepository.findByTypeAndLocationContainingIgnoreCase(type, location, sort).stream()
-            .map(InstrumentMapper::toDto)
-            .collect(Collectors.toList());
-  }
+    if (type != null) spec = spec.and(InstrumentSpecification.hasType(type));
+    if (location != null) spec = spec.and(InstrumentSpecification.hasLocation(location));
+    if (condition != null) spec = spec.and(InstrumentSpecification.hasCondition(condition));
+    if (brand != null) spec = spec.and(InstrumentSpecification.hasBrand(brand));
+    if (assignedStudent != null) spec = spec.and(InstrumentSpecification.hasAssignedStudent(assignedStudent));
 
-  @Override
-  public List<InstrumentDto> getInstrumentsByTypeAndCondition(String type, String conditionStr, Sort sort) {
-    Condition condition = Condition.valueOf(conditionStr.toUpperCase()); // Parse string to enum safely
-    return instrumentRepository.findByTypeAndConditionIgnoreCase(type, condition, sort).stream()
+    return instrumentRepository.findAll(spec, sort).stream()
             .map(InstrumentMapper::toDto)
             .collect(Collectors.toList());
   }
