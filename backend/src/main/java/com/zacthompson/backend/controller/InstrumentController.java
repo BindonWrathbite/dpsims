@@ -3,15 +3,16 @@ package com.zacthompson.backend.controller;
 import com.zacthompson.backend.dto.InstrumentDto;
 import com.zacthompson.backend.service.InstrumentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-/*
-  REST controller for managing instruments.
-  Uses a single endpoint for flexible filtering and sorting.
+/**
+ * REST controller for instruments.
+ * Supports paginated, sorted, and filtered retrieval of instruments.
  */
 @RestController
 @RequestMapping("/api/instruments")
@@ -25,25 +26,29 @@ public class InstrumentController {
   }
 
   /*
-    Unified endpoint for retrieving instruments.
-    Supports optional filters: type, location, condition, brand, assignedStudent
-    Example: GET /api/instruments?type=Trumpet&location=Band Room&sortBy=brand&direction=asc
-  */
+    Main endpoint for retrieving instruments with optional filters, sorting, and pagination.
+
+    Example:
+    GET /api/instruments?type=Trumpet&condition=GOOD&page=1&size=10&sortBy=brand&direction=asc
+   */
   @GetMapping
-  public ResponseEntity<List<InstrumentDto>> getFilteredInstruments(
+  public ResponseEntity<Page<InstrumentDto>> getFilteredInstruments(
           @RequestParam(required = false) String type,
           @RequestParam(required = false) String location,
           @RequestParam(required = false) String condition,
           @RequestParam(required = false) String brand,
           @RequestParam(required = false) String assignedStudent,
+          @RequestParam(defaultValue = "0") int page,
+          @RequestParam(defaultValue = "25") int size,
           @RequestParam(defaultValue = "type") String sortBy,
           @RequestParam(defaultValue = "asc") String direction
   ) {
     Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
-    List<InstrumentDto> results = instrumentService.getFilteredInstruments(
-            type, location, condition, brand, assignedStudent, sort
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<InstrumentDto> result = instrumentService.getFilteredInstruments(
+            type, location, condition, brand, assignedStudent, pageable
     );
-    return ResponseEntity.ok(results);
+    return ResponseEntity.ok(result);
   }
 
   @GetMapping("/{id}")

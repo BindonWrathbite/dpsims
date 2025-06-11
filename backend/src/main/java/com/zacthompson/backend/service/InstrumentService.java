@@ -1,35 +1,36 @@
 package com.zacthompson.backend.service;
 
 import com.zacthompson.backend.dto.InstrumentDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
-/*
-  Interface defining the service layer for instrument-related operations.
-  Now includes a flexible filter method that replaces multiple endpoint-specific ones.
- */
 public interface InstrumentService {
 
+  // Get all instruments, sorted (used for non-paginated views or exports)
   List<InstrumentDto> getAllInstruments(Sort sort);
 
+  // Get one instrument by ID
   InstrumentDto getInstrumentById(Long id);
 
+  // Create a new instrument
   InstrumentDto createInstrument(InstrumentDto dto);
 
+  // Update an existing instrument by ID
   InstrumentDto updateInstrument(Long id, InstrumentDto dto);
 
+  // Delete an instrument by ID
   void deleteInstrument(Long id);
 
-  /*
-    Flexible filter method supporting optional filtering by type, location, condition, brand, and assigned student.
-   */
-  List<InstrumentDto> getFilteredInstruments(
+  // Get a page of instruments filtered by optional fields (type, location, condition, etc.)
+  Page<InstrumentDto> getFilteredInstruments(
           String type,
           String location,
           String condition,
           String brand,
           String assignedStudent,
-          Sort sort
+          Pageable pageable
   );
 }

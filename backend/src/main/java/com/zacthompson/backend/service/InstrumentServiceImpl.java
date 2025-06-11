@@ -6,7 +6,8 @@ import com.zacthompson.backend.mapper.InstrumentMapper;
 import com.zacthompson.backend.repository.InstrumentRepository;
 import com.zacthompson.backend.repository.InstrumentSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 /*
   Implementation of the InstrumentService interface.
-  Includes flexible filtering logic based on optional parameters.
+  Handles business logic and database filtering using dynamic Specifications and pagination.
  */
 @Service
 public class InstrumentServiceImpl implements InstrumentService {
@@ -28,7 +29,7 @@ public class InstrumentServiceImpl implements InstrumentService {
   }
 
   @Override
-  public List<InstrumentDto> getAllInstruments(Sort sort) {
+  public List<InstrumentDto> getAllInstruments(org.springframework.data.domain.Sort sort) {
     return instrumentRepository.findAll(sort).stream()
             .map(InstrumentMapper::toDto)
             .collect(Collectors.toList());
@@ -65,18 +66,17 @@ public class InstrumentServiceImpl implements InstrumentService {
     instrumentRepository.deleteById(id);
   }
 
-  /*
-    Applies filtering and sorting in-memory for now.
-    Can be converted to Criteria queries or specs later for optimization.
+  /**
+   * Returns a paginated, filtered list of instruments based on optional query parameters.
    */
   @Override
-  public List<InstrumentDto> getFilteredInstruments(
+  public Page<InstrumentDto> getFilteredInstruments(
           String type,
           String location,
           String condition,
           String brand,
           String assignedStudent,
-          Sort sort
+          Pageable pageable
   ) {
     Specification<Instrument> spec = (root, query, cb) -> cb.conjunction();
 
@@ -86,8 +86,6 @@ public class InstrumentServiceImpl implements InstrumentService {
     if (brand != null) spec = spec.and(InstrumentSpecification.hasBrand(brand));
     if (assignedStudent != null) spec = spec.and(InstrumentSpecification.hasAssignedStudent(assignedStudent));
 
-    return instrumentRepository.findAll(spec, sort).stream()
-            .map(InstrumentMapper::toDto)
-            .collect(Collectors.toList());
+    return instrumentRepository.findAll(spec, pageable).map(InstrumentMapper::toDto);
   }
 }
