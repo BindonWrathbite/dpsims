@@ -1,21 +1,41 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-300">
-    <div class="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
-      <h1 class="text-3xl font-bold mb-4">Welcome to the Music Inventory System</h1>
-      <p class="mb-6 text-gray-600">Please sign in with your school account to continue.</p>
+  <div class="p-6">
+    <!-- Show nothing while loading -->
+    <div v-if="auth.loading" class="text-center text-gray-500 mt-20">
+      Checking authentication...
+    </div>
 
-      <button
-        class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-200"
+    <!-- Show login if unauthenticated -->
+    <div v-else-if="!auth.user" class="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-8 text-center mt-20">
+      <h2 class="text-2xl font-bold mb-4">Welcome to the Music Inventory System</h2>
+      <p class="mb-6 text-gray-600">Please sign in with your school account to continue.</p>
+      <Button
+        label="Sign in with Google"
+        icon="pi pi-google"
+        class="w-full p-button-raised p-button-rounded"
         @click="login"
-      >
-        Sign in with Google
-      </button>
+      />
+    </div>
+
+    <!-- Show dashboard if authenticated -->
+    <div v-else>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <Card class="cursor-pointer" @click="$router.push('/instruments')">
+          <template #title>Instrument Inventory</template>
+          <template #content>
+            <p>View and manage all musical instruments.</p>
+          </template>
+        </Card>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/authStore'
+const auth = useAuthStore()
+
 function login() {
-  window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+  window.location.href = 'http://localhost:8080/oauth2/authorization/google'
 }
 </script>
