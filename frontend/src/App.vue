@@ -12,7 +12,7 @@
           rounded
           @click="$router.push('/')" />
 
-        <h1 class="text-xl font-bold">Dearborn Music Inventory</h1>
+        <h1 class="text-xl font-bold">DPS Music Inventory Management</h1>
       </div>
 
       <!-- Show user info + logout when logged in -->
