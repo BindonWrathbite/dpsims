@@ -1,12 +1,12 @@
 <template>
   <div class="p-6">
     <!-- Show nothing while loading -->
-    <div v-if="auth.loading" class="text-center text-gray-500 mt-20">
+    <div v-if="loading" class="text-center text-gray-500 mt-20">
       Checking authentication...
     </div>
 
     <!-- Show login if unauthenticated -->
-    <div v-else-if="!auth.user" class="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-8 text-center mt-20">
+    <div v-else-if="!user" class="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-8 text-center mt-20">
       <h2 class="text-2xl font-bold mb-4">Welcome to the Music Inventory System</h2>
       <p class="mb-6 text-gray-600">Please sign in with your school account to continue.</p>
       <Button
@@ -33,7 +33,10 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/authStore'
+import { storeToRefs } from 'pinia'
+
 const auth = useAuthStore()
+const { user, loading } = storeToRefs(auth)
 
 function login() {
   window.location.href = 'http://localhost:8080/oauth2/authorization/google'

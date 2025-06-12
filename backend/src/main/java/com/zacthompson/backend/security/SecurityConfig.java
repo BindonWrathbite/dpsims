@@ -9,10 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
-
 
 @Configuration
 @EnableWebSecurity
@@ -39,7 +37,7 @@ public class SecurityConfig {
             )
             .oauth2Login(oauth2 -> oauth2
                     .userInfoEndpoint(userInfo -> userInfo
-                            .userService(customOAuth2UserService) // ✅ REGISTERED HERE
+                            .userService(customOAuth2UserService)
                     )
                     .defaultSuccessUrl("http://localhost:5173/", true)
             )
