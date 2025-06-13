@@ -23,8 +23,10 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
             .authorizeHttpRequests(auth -> auth
+//                            .anyRequest().permitAll() // TESTING ONLY
                     .requestMatchers("/").permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest()
+                    .authenticated()
             )
             .exceptionHandling(ex -> ex
                     .defaultAuthenticationEntryPointFor(
@@ -41,6 +43,8 @@ public class SecurityConfig {
                     )
                     .defaultSuccessUrl("http://localhost:5173/", true)
             )
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/logout"))
+//                   csrf.disable()) // FOR TESTING ONLY
             .logout(logout -> logout
                     .logoutSuccessUrl("http://localhost:5173/")
                     .invalidateHttpSession(true)

@@ -49,6 +49,19 @@ public class InstrumentServiceImpl implements InstrumentService {
   }
 
   @Override
+  public List<InstrumentDto> createInstruments(List<InstrumentDto> dtos) {
+    List<Instrument> instruments = dtos.stream()
+            .map(InstrumentMapper::toEntity)
+            .toList();
+
+    List<Instrument> saved = instrumentRepository.saveAll(instruments);
+
+    return saved.stream()
+            .map(InstrumentMapper::toDto)
+            .toList();
+  }
+
+  @Override
   public InstrumentDto updateInstrument(Long id, InstrumentDto dto) {
     Instrument existing = instrumentRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Instrument not found with id: " + id));

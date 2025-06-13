@@ -42,7 +42,12 @@ export const useAuthStore = defineStore('auth', {
     },
 
     logout() {
-      window.location.href = 'http://localhost:8080/logout'
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = 'http://localhost:8080/logout'
+      form.style.display = 'none'
+      document.body.appendChild(form)
+      form.submit()
     },
 
     reset() {

@@ -10,9 +10,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * REST controller for instruments.
- * Supports paginated, sorted, and filtered retrieval of instruments.
+import java.util.List;
+
+/*
+  REST controller for instruments.
+  Supports paginated, sorted, and filtered retrieval of instruments.
  */
 @RestController
 @RequestMapping("/api/instruments")
@@ -70,5 +72,11 @@ public class InstrumentController {
   public ResponseEntity<Void> deleteInstrument(@PathVariable Long id) {
     instrumentService.deleteInstrument(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @PostMapping("/bulk")
+  public ResponseEntity<List<InstrumentDto>> bulkCreateInstruments(@RequestBody List<InstrumentDto> dtos) {
+    List<InstrumentDto> saved = instrumentService.createInstruments(dtos);
+    return ResponseEntity.ok(saved);
   }
 }

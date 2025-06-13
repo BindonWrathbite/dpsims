@@ -18,6 +18,9 @@ public interface InstrumentService {
   // Create a new instrument
   InstrumentDto createInstrument(InstrumentDto dto);
 
+  // Create multiple instruments in bulk
+  List<InstrumentDto> createInstruments(List<InstrumentDto> dtos);
+
   // Update an existing instrument by ID
   InstrumentDto updateInstrument(Long id, InstrumentDto dto);
 

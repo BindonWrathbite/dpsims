@@ -22,7 +22,7 @@
           icon="pi pi-sign-out"
           label="Logout"
           class="p-button-sm p-button-text"
-          @click="auth.logout"
+          @click="$router.push('/logout-confirm')"
         />
       </div>
     </header>

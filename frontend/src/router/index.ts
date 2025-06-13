@@ -8,6 +8,11 @@ const routes = [
     component: HomeView
   },
   {
+    path: '/logout-confirm',
+    name: 'logout-confirm',
+    component: () => import('../views/LogoutConfirmView.vue')
+  },
+  {
     path: '/instruments',
     name: 'instruments',
     component: () => import('../views/InstrumentsView.vue')

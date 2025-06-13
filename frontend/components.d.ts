@@ -8,6 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BaseDataTable: typeof import('./src/components/BaseDataTable.vue')['default']
+    BaseEntityForm: typeof import('./src/components/BaseEntityForm.vue')['default']
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
@@ -15,6 +17,7 @@ declare module 'vue' {
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
+    InstrumentForm: typeof import('./src/components/InstrumentForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
