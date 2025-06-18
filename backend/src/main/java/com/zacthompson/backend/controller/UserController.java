@@ -16,23 +16,25 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 
   @Autowired
   private UserRepository userRepository;
 
-  @GetMapping("/user")
+  @GetMapping()
   public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {
     if (principal == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    System.out.println("OAuth attributes: " + principal.getAttributes());
+    Map<String, Object> attributes = principal.getAttributes();
+    String name = attributes.getOrDefault("name", "Unknown").toString();
+    String email = attributes.getOrDefault("email", "Unknown").toString();
 
     Map<String, Object> userInfo = new HashMap<>();
-    userInfo.put("name", principal.getAttribute("name"));  // direct from Google
-    userInfo.put("email", principal.getAttribute("email"));
+    userInfo.put("name", name);
+    userInfo.put("email", email);
 
     return ResponseEntity.ok(userInfo);
   }
